@@ -23,7 +23,7 @@ Review ask #1: sanity-check the offset math and the follow-mode acceptance reaso
 
 ## 2. EXTERNAL "ROOT OVER WIFI" PLAN — I REJECTED IT at the SELinux seapp gate. Please independently verify the rejection.
 
-Claims to check against <local-path>/Documents/Codex/2026-10-10/mind/work/rev5-dump/ (system.bin, and our extracted services-src):
+Claims to check against the extracted rev5 dump (system.bin, and our extracted services-src):
 a. seapp_contexts has exactly ONE uid-2000 line: `user=shell seinfo=platform domain=shell type=shell_data_file` (extracted from system.bin at file offset ≈116117844).
 b. mac_permissions.xml maps exactly two signers, both ASKEY certs (CN=Askey, <redacted-email>, 2019→2046), both → seinfo=platform. No testkey entry, no <default>. (Extracted near the same offset region.)
 c. Therefore a payload APK signed with any non-Askey key gets seinfo=default → no seapp line matches uid 2000 → zygote selinux_android_setcontext fails → spawn aborts. The plan's §4 signing rationale is inverted.

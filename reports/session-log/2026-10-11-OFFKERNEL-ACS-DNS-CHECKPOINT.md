@@ -23,7 +23,7 @@ Primary root path = **off-kernel TR069/Troya**. Everything is built/staged.
 - SSID `<ssid>`, device MAC `<device-mac>`, FW `ES_g1.0_RG3205W3.7.0`.
 
 ## Why DNS is still wrong (evidence)
-- Device `ping api.es-pro.movistar-home.com` → `unknown host`; `main.acs.telefonica.net` → real `<acs-ip-2>`.
+- Device `ping api.es-pro.movistar-home.com` → `unknown host`; `main.acs.telefonica.net` → real `80.58.63.218`.
 - `arp_dns_spoof.py` **restarted with `movistar-home.com` in `HIJACK_SUFFIXES`** (mitm.log confirms) yet **no `*** HIJACKING` / `passthrough` lines ever appear** ⇒ the device's DNS queries never traverse the spoofed gateway path (its ARP cache still points at the real router; the spoofer only answers when the device re-ARPs). Fresh names under both `movistar-home.com` and `telefonica.net` also fail ⇒ not an NXDOMAIN cache issue.
 - ACS `ConnectionRequest` to `http://<device-ip>:7547/` returns **200**, but **no device Inform** reaches the ACS → can't push `SetParameterValues` that way.
 - `am broadcast -a askey.tr069.intent.action.Device.LAN --es addr_type static --es dns_server <tester-host> …` → `Broadcast completed: result=0` (no receiver for an untrusted_app sender).
