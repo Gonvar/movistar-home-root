@@ -3,6 +3,14 @@
 Target: RG3205W / msm8953 / Adreno 506 / kernel 3.18.71-perf armv7 / no KASLR /
 SELinux enforcing / untrusted_app uid 10042 (Termux).
 
+> **SUPERSEDED (session 10).** The §3 conclusion below that "the stale PTE
+> survives the free" was based on **marker liveness**, which `kgsl-faulttest`
+> later showed is not a mapping test (translation faults are non-fatal). The
+> value-based staged test in
+> [`2026-10-13-KGSL-SESSION10-G1-NOT-MAPPED.md`](2026-10-13-KGSL-SESSION10-G1-NOT-MAPPED.md)
+> shows G1 is in fact **unmapped by the second `_gpu_set_svm_region`**. §1
+> (probe-artifact correction) and §2 (aliasing) still stand; §3 does not.
+
 This note supersedes the "stale SVM gpuaddr appeared not CP-writable" section of
 `2026-10-12-KGSL-PENDING-FREE-RESULTS.md`.
 

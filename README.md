@@ -38,9 +38,12 @@ single shared `memdesc->gpuaddr` / `memdesc->useraddr` fields. A single
    re-assigns `memdesc->gpuaddr = G2`, leaving **G1 registered and GPU-mapped
    but no longer tracked** by the entry.
 
-On teardown, `kgsl_mmu_put_gpuaddr()` unmaps **G2 only**. G1's SMMU page-table
-entry still points at the now-freed physical pages — a **stale-PTE GPU write**
-primitive (the GPU can still write to reclaimed memory).
+**Device result (session 10): the second `_gpu_set_svm_region` tears G1 down.**
+The entry ends up tracking `G2` only, and there is **no orphaned/stale GPU
+mapping** (see [`reports/2026-10-13-KGSL-SESSION10-G1-NOT-MAPPED.md`](reports/2026-10-13-KGSL-SESSION10-G1-NOT-MAPPED.md)).
+The obvious stale-PTE primitive therefore does **not** exist in this tree; the
+open work is to find the actual exploitable consequence of the shared
+`gpuaddr`/`useraddr` (see the report's candidate directions).
 
 The Google fix is two patches (see [`reference/upstream-commits.md`](reference/upstream-commits.md)):
 
@@ -70,22 +73,24 @@ Consolidated from [`reports/`](reports/) (all reproduced under
 * **SVM GPU writes are real and CPU-coherent** (`kgsl-svmsize`, `kgsl-svmcp`):
   `CP_MEM_WRITE` to a single SVM `gpuaddr` lands in the CPU mapping, for 1- and
   2-page entries, primed or not.
-* **G1 and G2 alias the same physical pages** (`kgsl-svmdual`): one IB writing
-  `G1=A1; G2=B2; marker=C3` leaves the page at `B2` — both writes landed, G2's
-  overwrote G1's. (An earlier mis-read of this as "G1 did not land" is now
-  corrected.)
-* **The stale PTE survives the free** (`kgsl-stalelive`): after
-  `GPUOBJ_FREE(E)` + both `munmap`s, an IB `[CP_MEM_WRITE(G1, …); marker]`
-  still retires — i.e. **G1 remains GPU-mapped after the object is destroyed**.
+* **SVM GPU writes are value-coherent** (`kgsl-svmsize`, `kgsl-g1map`): a
+  `CP_MEM_WRITE` to an SVM `gpuaddr` is observable in the CPU alias, so
+  mapping can be tested by **value**, not by marker liveness.
+* **G1 maps after `mmap`#1 and after the shrink, but is unmapped by the second
+  `_gpu_set_svm_region`** (`kgsl-g1map` s0/s1/s2/s3). This falsifies the
+  stale-PTE premise.
+* **GPU translation faults are non-fatal** (`kgsl-faulttest`): an IB writing an
+  unmapped `gpuaddr` and then a marker still retires the marker. Marker
+  liveness alone is therefore **not** a mapping test.
 
 ## The open problem
 
-A fresh 4 KiB KGSL allocation did **not** reclaim `E`'s freed page within 24
-allocations (and 16 384 in an earlier, noisier run). The freed pages go to the
-**KGSL page pool** (FIFO, zeroed on entry), whose depth is device-tree driven and
-unreadable to `untrusted_app` here. **Reliable reclaim + a `msg_msg`/PTE/page-
-table target is the next step**; the CVE-2019-2215 arbitrary physmap read is
-available as the locate/verify oracle.
+Earlier reclaim attempts (`kgsl-poolreclaim`, `kgsl-reclaim`: 8192 × 4 KiB KGSL
+allocations + a 256 MiB anon spray) found no hit — but, per the correction above,
+they were not measuring a mapping because G1 has none. Producing a **genuine
+dangling GPU mapping** (or a freed `kgsl_mem_entry` reachable via a live vma) is
+the current focus; the CVE-2019-2215 arbitrary physmap read remains available as
+the locate/verify oracle.
 
 ---
 
@@ -104,7 +109,10 @@ observational / safe-by-default, and each prints a `[n] step …` trace.
 | `kgsl-svmdual.c` | do `G1`/`G2` alias? does the CP survive? |
 | `kgsl-svmsize.c` | size / priming / single-IB controls for SVM writes |
 | `kgsl-svmstale.c` | stale-`G1` write attempt (older, superseded) |
-| `kgsl-stalelive.c` | G1 liveness after free + 4 KiB reclaim scan |
+| `kgsl-stalelive.c` | (marker-based) G1 liveness after free + reclaim scan — **superseded** |
+| `kgsl-g1map.c` | staged **value-based** G1/G2 mapping test (decisive) |
+| `kgsl-faulttest.c` | is a CP write to an unmapped `gpuaddr` fatal? (it is not) |
+| `kgsl-reclaim.c` | paired-submit kgsl + anon reclaim drain |
 | `kgsl-poolreclaim.c` | FIFO page-pool drain (self-verifying, batched) |
 | `kgsl-cp.c`, `kgsl-probe.c`, `kgsl-svm{,2,3}.c`, `kgsl-1905*.c` | reachability / CP / SVM scaffolding |
 | `poc-ro.c` | CVE-2019-2215 arbitrary physmap read (locate/verify oracle) |
