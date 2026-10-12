@@ -16,10 +16,18 @@ use-after-free behind **CVE-2021-1905** (a.k.a. the `_gpu_set_svm_region()`
 double-region bug), what was proven on the physical device, the exact
 obstacles that remain, and the tooling used to get there.
 
-> **Status: partial primitive, not a full exploit.** We have a deterministic,
-> race-free trigger and a *stale GPU page-table entry* that survives the free of
-> the owning object. Turning that into a kernel read/write is still open; the
-> current wall is reliable **physical-page reclaim** of the freed KGSL pages.
+> **New here?** Read [`STORY.md`](STORY.md) for the full narrative — every path
+tried, kernel **and** off-kernel (TR-069/CWMP, ACS impersonation, the updater
+silent-install chain), the dead ends, and the retractions. Raw session records
+are in [`reports/session-log/`](reports/session-log/); off-kernel tooling is in
+[`harnesses/offkernel/`](harnesses/offkernel/).
+
+> **Status: partial primitive, not a full exploit.** We have a deterministic
+trigger for the shared `gpuaddr`/`useraddr` bug, a "zombie" freed-entry remap,
+and the exact upstream fix diffs. Turning it into a kernel read/write is still
+open; the live thread is the **two-process SVM map race** (patch #2's target).
+An earlier "stale GPU page-table entry" claim was **falsified** in session 10
+(see below).
 
 ---
 
@@ -112,6 +120,8 @@ observational / safe-by-default, and each prints a `[n] step …` trace.
 | `kgsl-stalelive.c` | (marker-based) G1 liveness after free + reclaim scan — **superseded** |
 | `kgsl-g1map.c` | staged **value-based** G1/G2 mapping test (decisive) |
 | `kgsl-faulttest.c` | is a CP write to an unmapped `gpuaddr` fatal? (it is not) |
+| `kgsl-dblcheck.c` | freed-entry "zombie" remap + lifetime/refcount probe |
+| `kgsl-race.c` | two-process (fork + inherited fd) SVM map race probe |
 | `kgsl-reclaim.c` | paired-submit kgsl + anon reclaim drain |
 | `kgsl-poolreclaim.c` | FIFO page-pool drain (self-verifying, batched) |
 | `kgsl-cp.c`, `kgsl-probe.c`, `kgsl-svm{,2,3}.c`, `kgsl-1905*.c` | reachability / CP / SVM scaffolding |

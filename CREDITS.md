@@ -63,6 +63,20 @@ Device facts cross-checked there: Snapdragon 625 (8C8T Cortex-A53) @1.8 GHz,
 * **Maddie Stone**, *"Bad Binder: Android In-The-Wild Exploit"* (Project Zero /
   Android Security) — public analysis of the in-the-wild chain.
 
+## CVE-2021-0920 (af_unix GC vs `MSG_PEEK`) — the alternative
+
+* **`sgkdev/bad_garbage`** — a working public exploit for the *same*
+  `unix_gc` / `MSG_PEEK` interaction (targets modern x86_64; used here only as a
+  technique reference).
+* Upstream fix: `cbcf01128d0a` *"af_unix: fix garbage collect vs MSG_PEEK"*.
+
+## Off-kernel device research
+
+The TR-069/CWMP, ACS-impersonation and updater/silent-install work documented in
+[`STORY.md`](STORY.md) and [`reports/session-log/`](reports/session-log/) was
+derived here from the shipped RG3205W apps and the community device project
+above. It complements the kernel line and is published for defensive value.
+
 ## Tooling
 
 * **REA** (reverse-engineering agent) — used to reduce the 26 MB kernel image
