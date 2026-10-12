@@ -1,14 +1,23 @@
-# build outputs
+# build outputs (harnesses/build.sh compiles every harnesses/*.c to a
+# same-named binary + a .gz; list the binaries explicitly so a stray
+# source file can't produce a tracked executable, but cover the .gz
+# with a wildcard so new harnesses don't need a second entry here)
 *.o
 *.a
+*.gz
 harnesses/kgsl-1905
 harnesses/kgsl-1905b
 harnesses/kgsl-1905c
 harnesses/kgsl-cp
+harnesses/kgsl-dblcheck
+harnesses/kgsl-faulttest
+harnesses/kgsl-g1map
 harnesses/kgsl-pend
 harnesses/kgsl-pend2
 harnesses/kgsl-poolreclaim
 harnesses/kgsl-probe
+harnesses/kgsl-race
+harnesses/kgsl-reclaim
 harnesses/kgsl-stalelive
 harnesses/kgsl-svm
 harnesses/kgsl-svm2
