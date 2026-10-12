@@ -1,0 +1,26 @@
+# build outputs
+*.o
+*.a
+harnesses/kgsl-1905
+harnesses/kgsl-1905b
+harnesses/kgsl-1905c
+harnesses/kgsl-cp
+harnesses/kgsl-pend
+harnesses/kgsl-pend2
+harnesses/kgsl-poolreclaim
+harnesses/kgsl-probe
+harnesses/kgsl-stalelive
+harnesses/kgsl-svm
+harnesses/kgsl-svm2
+harnesses/kgsl-svm3
+harnesses/kgsl-svmcp
+harnesses/kgsl-svmdbl
+harnesses/kgsl-svmdual
+harnesses/kgsl-svmg1
+harnesses/kgsl-svmsize
+harnesses/kgsl-svmstale
+harnesses/poc-ro
+
+# macOS / editors
+.DS_Store
+*.swp
