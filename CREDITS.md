@@ -24,6 +24,28 @@ CVE-2021-1905/-1906 were disclosed in the **May 2021 Android Security Bulletin**
 and attributed to **Qualcomm**. Google noted limited, targeted in-the-wild
 exploitation.
 
+## Community device research — `zry98/movistar-home-hacks`
+
+The reference community project for the **ASKEY RG3205W** itself (same SoC,
+Android 8.1, kernel 3.18.71-perf armv7): disassembly, EDL mode,
+**`firehose.mbn`**, bootloader unlock, stock ROM dumps and a custom ROM.
+Invaluable for anyone reproducing this research (obtaining the shipped kernel,
+boot/vendor partitions, and a recovery path after a bad run).
+
+* **zry98** — maintainer, [`zry98/movistar-home-hacks`](https://github.com/zry98/movistar-home-hacks) (GPL-3.0).
+* **alfredopironti**, **alxayu97** — code contributors.
+* Community credits named in that repo's README: **Cansi**, **Carlos**,
+  **Howard**, **Iscle** ([@iscle](https://github.com/iscle)), **José**, **Pablo**,
+  **Nadia Santalla** ([@nadiamoe](https://github.com/nadiamoe)), **P4blo24**,
+  **josemoraocana**, **Alfredo** ([@alfredopironti](https://github.com/alfredopironti)),
+  **Chocomerde**, **Lucas Sánchez**, **Tony**, **Javier**, **Ángel Luis**,
+  **[@alxayu97](https://github.com/alxayu97)**.
+* Telegram community: [@movistar_home_hacking](https://t.me/movistar_home_hacking).
+
+Device facts cross-checked there: Snapdragon 625 (8C8T Cortex-A53) @1.8 GHz,
+3 GB RAM, 32 GB eMMC, **armv7l (32-bit) userspace on an arm64-capable SoC**,
+8" 1280x800 Goodix I2C touch, QCA9379 Wi-Fi/BT, OV2735 camera.
+
 ## Prior 3.18 KGSL hardening
 
 * **Deepak Kumar** — vendor commit `0a4ef64e3f`, *"Return mementry only if

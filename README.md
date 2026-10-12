@@ -121,11 +121,23 @@ turned "SVM writes never land" into "all SVM writes land".
 
 ---
 
+## Community / reproduction resources
+
+The community project for this exact device is
+**[`zry98/movistar-home-hacks`](https://github.com/zry98/movistar-home-hacks)**
+(same RG3205W, Snapdragon 625, Android 8.1, kernel 3.18.71-perf armv7):
+disassembly, **EDL mode**, a working `firehose.mbn`, bootloader unlock, stock ROM
+dumps and a custom ROM. Use it to obtain the shipped `boot`/`system`/`vendor`
+images (our analysis runs against the shipped kernel) and as a recovery path.
+See [`CREDITS.md`](CREDITS.md) for the full list of community contributors.
+
 ## Credits
 
 See [`CREDITS.md`](CREDITS.md). This work builds directly on the public patches
 and prior-art PoCs listed there. The "original repo" this research indexed first
-is [`TAKIANFIF/CVE-2021-1905-CVE-2021-1906-CVE-2021-28663-CVE-2021-28664`](https://github.com/TAKIANFIF/CVE-2021-1905-CVE-2021-1906-CVE-2021-28663-CVE-2021-28664).
+is [`TAKIANFIF/CVE-2021-1905-CVE-2021-1906-CVE-2021-28663-CVE-2021-28664`](https://github.com/TAKIANFIF/CVE-2021-1905-CVE-2021-1906-CVE-2021-28663-CVE-2021-28664),
+and the device community reference is
+[`zry98/movistar-home-hacks`](https://github.com/zry98/movistar-home-hacks).
 
 ## Legal / ethics
 
