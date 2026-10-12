@@ -21,7 +21,7 @@ No cleartext escape either: neither 0.561 nor 0.588 manifests set
 Signing certs extracted from the LIVE pulled APKs (`loot/installed-updater-20261012/base.apk`)
 and system images — all platform apps (AskeyTR69, updater, auth) are signed:
 
-    subject=C=TW,...,CN=Askey, emailAddress=anderson_yang@askey.com
+    subject=C=TW,...,CN=Askey, emailAddress=<redacted-email>
     sha256 79:C6:3B:DF:78:57:18:B9:CC:55:63:6D:B1:B5:64:61:46:74:74:55:1F:A3:E6:72:2F:31:EA:31:9F:B6:67:27
 
 Our staged `troya/pwn.apk` is signed with the **public AOSP testkey**

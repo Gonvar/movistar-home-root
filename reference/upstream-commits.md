@@ -6,7 +6,7 @@ the authoritative copies live in the upstream kernel trees.
 ## Patch #1 — `d6770f2b86b6` ("CVE-2021-1905_1 KGSL")
 
 Repo: `Hikari-no-Tenshi/android_kernel_oneplus_sm8150`
-Committed-by: `hengyir.guo@oneplus.com`
+Committed-by: `<redacted-email>`
 
 Removes the single shared `memdesc->useraddr` / `memdesc->mapsize` mapping
 identity (invalid when one memdesc is mapped by several processes) and replaces
@@ -37,7 +37,7 @@ Representative shape:
 ## Patch #2 — `be897e2fa155` ("CVE-2021-1905_2 KGSL")
 
 Repo: `Hikari-no-Tenshi/android_kernel_oneplus_sm8150`
-Committed-by: `mayuwu@wingtech.com`
+Committed-by: `<redacted-email>`
 
 Locks `_gpu_set_svm_region()` and refuses to re-assign `gpuaddr` — this is the
 check whose absence gives our deterministic double-region trigger:

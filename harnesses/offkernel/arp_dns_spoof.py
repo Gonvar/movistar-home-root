@@ -41,7 +41,7 @@ HIJACK_SUFFIXES = [
     "telecable.es", "o2online.de", "movistar-home.com",
 ]
 # hardcoded ACS endpoints found in the AskeyTR69 APK (HttpDns fallback + current DNS)
-ACS_IPS = ["80.58.59.207", "80.58.63.218"]
+ACS_IPS = ["<acs-ip-1>", "<acs-ip-2>"]
 ACS_PORT = 7016
 SPOOF_IP = None  # our LAN IP, answered for hijacked domains
 

@@ -14,9 +14,9 @@ and want your entry changed or removed, open an issue.
 Located via commit search; applied in the OnePlus SM8150 tree:
 
 * **Patch #1** `d6770f2b86b6` — *"Apply google patch CVE-2021-1905_1 KGSL"*
-  — committed by **hengyir.guo@oneplus.com**.
+  — committed by **<redacted-email>**.
 * **Patch #2** `be897e2fa155` — *"Apply google patch CVE-2021-1905_2 KGSL"*
-  — committed by **mayuwu@wingtech.com**.
+  — committed by **<redacted-email>**.
 * Repo: [`Hikari-no-Tenshi/android_kernel_oneplus_sm8150`](https://github.com/Hikari-no-Tenshi/android_kernel_oneplus_sm8150).
 
 The underlying patch content originates from **Google** (Android security);

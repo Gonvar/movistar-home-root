@@ -6,7 +6,7 @@ Device: Movistar Home (ASKEY RG3205W, Android 8.1, armv7l, 3.18.71-perf, uid cen
 
 Chain: ACS SetParameterValues → 8785 (NtpTrustedTime.LocalSocketService, system_server) → Settings.Global ntp_server_1..5 → boot refresh → unresolvable slot-0 canary DNS-fails → ASKEY retry rotation (10s) → slot-1 = <tester-host> → SNTP request → our responder → SntpClient accepts → SystemClock.setCurrentTimeMillis.
 
-Evidence (all archived under /Users/arnaugonzalezvargas/movistar-home-tr069/):
+Evidence (all archived under <local-path>/movistar-home-tr069/):
 - Settings.Global readback (helper app): 4 of 5 ntp slots are ours, verbatim (3 injection canaries stored raw → store-only, confirmed).
 - 8785 live readback from Termux, 3-token framing `get>...>0>...>x` (2-token framing enters the replace branch — corrects our earlier silence): returned mServers[] matching Settings.
 - Requests to our :123 with req[0]=0x1B (8.1 SntpClient). Responses: 48B, stratum 1, mode 4, originate echoed.
@@ -23,9 +23,9 @@ Review ask #1: sanity-check the offset math and the follow-mode acceptance reaso
 
 ## 2. EXTERNAL "ROOT OVER WIFI" PLAN — I REJECTED IT at the SELinux seapp gate. Please independently verify the rejection.
 
-Claims to check against /Users/arnaugonzalezvargas/Documents/Codex/2026-10-10/mind/work/rev5-dump/ (system.bin, and our extracted services-src):
+Claims to check against <local-path>/Documents/Codex/2026-10-10/mind/work/rev5-dump/ (system.bin, and our extracted services-src):
 a. seapp_contexts has exactly ONE uid-2000 line: `user=shell seinfo=platform domain=shell type=shell_data_file` (extracted from system.bin at file offset ≈116117844).
-b. mac_permissions.xml maps exactly two signers, both ASKEY certs (CN=Askey, anderson_yang@askey.com, 2019→2046), both → seinfo=platform. No testkey entry, no <default>. (Extracted near the same offset region.)
+b. mac_permissions.xml maps exactly two signers, both ASKEY certs (CN=Askey, <redacted-email>, 2019→2046), both → seinfo=platform. No testkey entry, no <default>. (Extracted near the same offset region.)
 c. Therefore a payload APK signed with any non-Askey key gets seinfo=default → no seapp line matches uid 2000 → zygote selinux_android_setcontext fails → spawn aborts. The plan's §4 signing rationale is inverted.
 d. The install-time half of the plan DOES work statically: PMS pre-creates SharedUser android.uid.shell uid 2000 every boot (services-src PMS:1684-1689), com.android.shell is deleted from the image (no member packages), and Settings.java:641-642 adopts ANY signer when the SharedUser's signatures are null. So the payload installs at uid 2000 but never runs. Confirm this reading.
 e. Their TLS claim is wrong: UnsafeOkHttpClientBuilder is used only by HomeZoneApiClient; the SW-update chain uses AppModule.provideOkHttpClient = stock OkHttp with real validation (updater-src on disk). The fake-API transport stays dead; moot anyway since the user has a tap-install channel.
