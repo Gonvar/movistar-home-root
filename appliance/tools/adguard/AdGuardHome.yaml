@@ -1,0 +1,43 @@
+# AdGuard Home starting config for the box (pushed by tools/adguard.sh push).
+# AdGuard fills in every other setting with its defaults and rewrites this
+# file on the box when settings change in the UI; this copy is the seed.
+#
+# - admin UI on localhost only, no login: reach it with
+#     ssh -N -L 3000:127.0.0.1:3000 mhbox   ->  http://localhost:3000
+# - DNS on the LAN IPv4 only (the box also has public IPv6 addresses)
+# - encrypted upstreams; plain-IP bootstrap + fallback keep lookups working
+#   when the clock is wrong (1970 after a reboot breaks TLS)
+http:
+  address: 127.0.0.1:3000
+users: []
+dns:
+  bind_hosts:
+    - 192.168.1.100
+  port: 53
+  upstream_dns:
+    - https://dns.quad9.net/dns-query
+    - https://cloudflare-dns.com/dns-query
+  upstream_mode: load_balance
+  bootstrap_dns:
+    - 9.9.9.9
+    - 1.1.1.1
+  fallback_dns:
+    - 9.9.9.9
+    - 1.1.1.1
+  # LAN reverse lookups (device names in the query log) go to the router;
+  # Android has no resolv.conf, so the default would be 127.0.0.1
+  use_private_ptr_resolvers: true
+  local_ptr_upstreams:
+    - 192.168.1.1
+  cache_size: 4194304
+  cache_optimistic: true
+filters:
+  - enabled: true
+    url: https://adguardteam.github.io/HostlistsRegistry/assets/filter_1.txt
+    name: AdGuard DNS filter
+    id: 1
+  - enabled: true
+    url: https://adguardteam.github.io/HostlistsRegistry/assets/filter_2.txt
+    name: AdAway Default Blocklist
+    id: 2
+schema_version: 34

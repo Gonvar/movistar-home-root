@@ -1,0 +1,23 @@
+# build outputs
+exploit/kgsl-forge
+*.gz
+*.o
+*.a
+
+# macOS / editors
+.DS_Store
+*.swp
+
+# local captures (device output, keys, captures) — never commit
+uploads/
+*.pem
+*.key
+*.log
+
+# app build outputs / signing material — never commit
+*.apk
+*.idsig
+*.jks
+*.keystore
+*/out/
+*/build/

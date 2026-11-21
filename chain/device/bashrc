@@ -1,0 +1,12 @@
+# Movistar Home toolkit -- Termux session hook.
+#
+# Starting sshd + the job poller on every fresh Termux session is what makes a
+# power cycle need no typing: open the app, the stack comes up by itself.
+#
+# It is idempotent (start.sh guards each piece) and cannot hang the prompt: it
+# runs detached in the background and logs to ~/start.log.  Delete this block if
+# you ever want the toolkit to stop coming up on its own.
+if [ -n "$PS1" ] && [ -z "$MH_BOOTED" ]; then
+  export MH_BOOTED=1
+  setsid nohup sh "$HOME/start.sh" >/dev/null 2>&1 &
+fi
